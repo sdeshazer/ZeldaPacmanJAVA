@@ -9,6 +9,13 @@ public class Player extends Entity{
 	
 	private Vector velocity;
 	
+	public Player(final float x, final float y, final float vx, final float vy) {
+		super(x,y);
+		velocity = new Vector(vx,vy);
+		
+		
+	}
+	
 	public void update(final int delta) {
 		
 		translate(velocity.scale(delta)); 
