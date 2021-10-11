@@ -18,8 +18,20 @@ import projectone.StartUpState;
 
 public class Game extends StateBasedGame{
 	
+	public static final int STARTUPSTATE = 0;
+	public static final int lEVEL1 = 1;
+	public static final int lEVEL2 = 2;
+	public static final int lEVEL3 = 3;
+	public static final int GAMEOVERSTATE = 4;
+	public static final int STATETRANSITION = 5;
+
+	
 	public final int ScreenWidth;
 	public final int ScreenHeight;
+	
+	Player player;
+	
+	
 
 	public Game(String title, int width, int height) {
 		super(title);
