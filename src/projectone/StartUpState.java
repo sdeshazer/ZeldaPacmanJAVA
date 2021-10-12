@@ -28,6 +28,8 @@ class StartUpState extends BasicGameState{
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		Game p1 = (Game)game;
+		
+		
 
 		/* g.drawImage(ResourceManager.getImage(BounceGame.STARTUP_BANNER_RSC),
 				225, 270);		
