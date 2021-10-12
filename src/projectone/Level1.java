@@ -15,20 +15,38 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 
-public class Level1 extends BasicGameState{
+public class Level1 extends BasicGameState {
 
 	Player player;
+	Game p1;
 	
+	private int mazewidth;
+	private int mazeheigth;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		// TODO Auto-generated method stub
+			
+	}
+	
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) {
 		
+		p1 = (Game)game;
+		mazewidth = p1.MAZEWIDTH;
+		mazeheigth = p1.MAZEHEIGHTH;
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		// TODO Auto-generated method stub
+		// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
+		
+		for(int i=0;i<mazeheigth;i++){		
+			for(int z=0;z < mazewidth; z++){
+				if(p1.maze[i][z]==1){
+					g.drawImage(ResourceManager.getImage(Game.STUMP_NODE),48, 48);
+				}
+			}
+		}
 		
 	}
 

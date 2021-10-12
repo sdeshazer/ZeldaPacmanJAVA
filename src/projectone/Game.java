@@ -24,7 +24,10 @@ public class Game extends StateBasedGame{
 	public static final int lEVEL3 = 3;
 	public static final int GAMEOVERSTATE = 4;
 	public static final int STATETRANSITION = 5;
-
+	
+	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
+	public final int MAZEWIDTH = 28;
+	public final int MAZEHEIGHTH = 31; 
 	
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -32,8 +35,10 @@ public class Game extends StateBasedGame{
 	Player player;
 	Monster monster; 
 	
+	
+	
 	// the typical pacman maze (31 x 28):
-	// 0 are normally dots, 2 is an energy dot. 3 is blank
+	// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
 	int maze[][] = {
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -68,7 +73,7 @@ public class Game extends StateBasedGame{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 	};
 	//31 x 28:	
-	int mazetemp[][] = new int[31][28];
+	int mazetemp[][] = new int[MAZEHEIGHTH][MAZEWIDTH];
 
 	int maze2[][]={
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -104,7 +109,7 @@ public class Game extends StateBasedGame{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 	};
 	
-	int maze2Temp[][]= new int[31][28];
+	int maze2Temp[][]= new int[MAZEHEIGHTH][MAZEWIDTH];
 	
 	int maze2cando[][] = {
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -192,9 +197,10 @@ public class Game extends StateBasedGame{
 		
 		player = new Player(232,424,0,0);
 		
+		ResourceManager.loadImage(STUMP_NODE);
 		
-		for(int v=0;v<31;v++){
-			for(int z=0;z<28;z++){
+		for(int v=0;v<MAZEHEIGHTH;v++){
+			for(int z=0;z<MAZEWIDTH;z++){
 				mazetemp[v][z]=maze[v][z];
 				maze2Temp[v][z]=maze2[v][z];
 			}
@@ -204,8 +210,8 @@ public class Game extends StateBasedGame{
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new Game("Project One", 800, 600));
-			app.setDisplayMode(800, 600, false);
+			app = new AppGameContainer(new Game("Project One", 448, 576));
+			app.setDisplayMode(448, 576, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
