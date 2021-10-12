@@ -26,6 +26,8 @@ public class Game extends StateBasedGame{
 	public static final int STATETRANSITION = 5;
 	
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
+	public static final String PLAYER = "projectone/resource/player.png";
+	public static final String PACMAZE = "projectone/resource/pacmanexample.png";
 	public final int MAZEWIDTH = 28;
 	public final int MAZEHEIGHTH = 31; 
 	
@@ -190,14 +192,16 @@ public class Game extends StateBasedGame{
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
-		addState(new StartUpState());
+		//addState(new StartUpState());
 		addState(new Level1());
 		addState(new SceneTransition());
 		addState(new GameOverState());
 		
-		player = new Player(232,424,0,0);
+		player = new Player(ScreenHeight - 148, ScreenWidth/2 -100,0,0);
 		
 		ResourceManager.loadImage(STUMP_NODE);
+		ResourceManager.loadImage(PLAYER);
+		ResourceManager.loadImage(PACMAZE);
 		
 		for(int v=0;v<MAZEHEIGHTH;v++){
 			for(int z=0;z<MAZEWIDTH;z++){

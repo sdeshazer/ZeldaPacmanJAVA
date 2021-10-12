@@ -40,14 +40,16 @@ public class Level1 extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
 		
+		g.drawImage(ResourceManager.getImage(Game.PACMAZE),0, 48);	
 		for(int i=0;i<mazeheigth;i++){		
 			for(int z=0;z < mazewidth; z++){
 				if(p1.maze[i][z]==1){
-					g.drawImage(ResourceManager.getImage(Game.STUMP_NODE),48, 48);
+					System.out.println(z);
+					g.drawImage(ResourceManager.getImage(Game.STUMP_NODE),0, 24 + (48 *z));
 				}
 			}
 		}
-		
+		p1.player.render(g);
 	}
 
 	@Override
