@@ -13,7 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 
 class StartUpState extends BasicGameState{
-
+	P1Game p1;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -22,12 +22,13 @@ class StartUpState extends BasicGameState{
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		container.setSoundOn(true);
+		p1 = (P1Game)game;
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		Game p1 = (Game)game;
+		P1Game p1 = (P1Game)game;
 		
 		
 
@@ -46,19 +47,16 @@ class StartUpState extends BasicGameState{
 			int delta) throws SlickException {
 
 		Input input = container.getInput();
-		Game p1 = (Game)game;
 		
-		//if (input.isKeyDown(Input.KEY_SPACE))
-		//	p1.enterState(Game.PLAYINGSTATE);	
+		if (input.isKeyDown(Input.KEY_SPACE))
+		  p1.enterState(P1Game.lEVEL1);	
 		
-		//p1.ball.update(delta);
-
+		p1.player.update(delta);
 	}
 	
 	
 	@Override
 	public int getID() {
-		//return Game.STARTUPSTATE;  // resource manager.
-		return 0;
+		return p1.STARTUPSTATE;  // resource manager.
 	}
 }

@@ -8,7 +8,7 @@ public class Stump extends Entity{
 	
 	public Stump() {
 		
-		addImageWithBoundingBox(ResourceManager.getImage(Game.STUMP_NODE));
+		addImageWithBoundingBox(ResourceManager.getImage(P1Game.STUMP_NODE));
 		
 	}
 
