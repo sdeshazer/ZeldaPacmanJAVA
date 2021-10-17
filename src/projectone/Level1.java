@@ -14,13 +14,13 @@ import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
-import bounce.BounceGame;
-
 
 public class Level1 extends BasicGameState {
 
 	Player player;
 	P1Game p1;
+	
+	Potions potions = new Potions();
 	
 	private int mazewidth;
 	private int mazeheigth;
@@ -61,17 +61,28 @@ public class Level1 extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
-		
-		g.drawImage(ResourceManager.getImage(P1Game.PACMAZE),0, 48);	
+		// drawing stumps here
+		g.drawImage(ResourceManager.getImage(P1Game.MAZE),0, 48);	
 		for(int i=0;i<mazeheigth;i++){		
-			for(int z=0;z < mazewidth; z++){
-				if(p1.maze[i][z]==1){
-					System.out.println(z);
-					g.drawImage(ResourceManager.getImage(P1Game.STUMP_NODE),0, 24 + (48 *z));
+			for(int j=0;j < mazewidth; j++){
+				if(p1.maze[i][j]==1){
+					//System.out.println(j);
+					
 				}
 			}
 		}
 		p1.player.render(g);
+		
+		for(int i = 0; i<mazeheigth;i++) {
+			for(int j = 0; j <mazewidth; j++ ) {
+				if(p1.maze[i][j] == 0) {
+					g.drawImage(ResourceManager.getImage(P1Game.POTION), (j*16) +8, (i*16)+50);
+				}
+			}
+		}
+		
+		
+		
 	}
 
 	@Override
@@ -81,27 +92,31 @@ public class Level1 extends BasicGameState {
 		p1 = (P1Game)game;
 
 		listenForCheatCode(input, game);
-
+		// TODO player controls:
 		if(input.isKeyDown(Input.KEY_D)) {
-			
-			
+			// move right
 		}
-		
-		
+		if(input.isKeyDown(Input.KEY_S)) {
+			//move down
+		}
+		if(input.isKeyDown(Input.KEY_W)) {
+			// move up 
+		}
+		if(input.isKeyDown(Input.KEY_A)) {
+			// move left
+		}
 	}
 
 	private void listenForCheatCode(Input input, StateBasedGame game) {
 		if(input.isKeyDown(Input.KEY_Q)) {
-			
-			
+			// TODO move to next level
 		}
-		
 	}
 
 	@Override
 	public int getID() {
 		// TODO Auto-generated method stub
-		return 0;
+		return  p1.lEVEL1;
 	}
 
 }

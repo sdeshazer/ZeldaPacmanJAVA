@@ -30,7 +30,7 @@ class StartUpState extends BasicGameState{
 			Graphics g) throws SlickException {
 		P1Game p1 = (P1Game)game;
 		
-		
+		//TODO add splash here
 
 		/* g.drawImage(ResourceManager.getImage(BounceGame.STARTUP_BANNER_RSC),
 				225, 270);		
@@ -38,8 +38,7 @@ class StartUpState extends BasicGameState{
 				250,330);
 		g.drawImage(ResourceManager.getImage(BounceGame.CONTROLS_RSC),
 				10,20); */
-		
-		
+			
 	}
 
 	@Override
