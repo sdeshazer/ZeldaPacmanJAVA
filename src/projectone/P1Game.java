@@ -28,15 +28,12 @@ public class P1Game extends StateBasedGame{
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
 	public static final String PLAYER = "projectone/resource/player.png";
 	public static final String MAZE = "projectone/resource/pacmanexample.png";
-	public static final String POTION = "projectone/resource/pacmanexample.png";
+	public static final String POTION = "projectone/resource/redpotion.png";
 	public final int MAZEWIDTH = 28;
 	public final int MAZEHEIGHTH = 31; 
 	
 	public final int ScreenWidth;
 	public final int ScreenHeight;
-	
-	
-	
 	
 	
 	Player player;
@@ -204,9 +201,10 @@ public class P1Game extends StateBasedGame{
 		player = new Player(ScreenHeight - 148, ScreenWidth/2 -100,0,0);
 		
 		ResourceManager.loadImage(STUMP_NODE);
+		ResourceManager.loadImage(POTION);
 		ResourceManager.loadImage(PLAYER);
 		ResourceManager.loadImage(MAZE);
-		ResourceManager.loadImage(POTION);
+		
 		
 		for(int i=0;i<MAZEHEIGHTH;i++){
 			for(int j=0;j<MAZEWIDTH;j++){

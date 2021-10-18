@@ -7,7 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="resource"/>
 	<classpathentry kind="lib" path="/lib/slick.jar"/>
 	<classpathentry kind="src" path="/jig"/>
 	<classpathentry kind="output" path="bin"/>

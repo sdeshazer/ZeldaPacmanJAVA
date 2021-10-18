@@ -31,7 +31,7 @@ class StartUpState extends BasicGameState{
 		P1Game p1 = (P1Game)game;
 		
 		//TODO add splash here
-
+	
 		/* g.drawImage(ResourceManager.getImage(BounceGame.STARTUP_BANNER_RSC),
 				225, 270);		
 		g.drawImage(ResourceManager.getImage(BounceGame.SPLASH_RSC),

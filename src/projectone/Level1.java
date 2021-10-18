@@ -62,27 +62,24 @@ public class Level1 extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
 		// drawing stumps here
-		g.drawImage(ResourceManager.getImage(P1Game.MAZE),0, 48);	
+	//	g.drawImage(ResourceManager.getImage(P1Game.MAZE),0, 48);	
 		for(int i=0;i<mazeheigth;i++){		
 			for(int j=0;j < mazewidth; j++){
 				if(p1.maze[i][j]==1){
-					//System.out.println(j);
-					
+					g.drawImage(ResourceManager.getImage(P1Game.STUMP_NODE).getScaledCopy(16, 16), (j*16) +8, (i*16)+50);
+
 				}
 			}
 		}
-		p1.player.render(g);
-		
+	
 		for(int i = 0; i<mazeheigth;i++) {
 			for(int j = 0; j <mazewidth; j++ ) {
-				if(p1.maze[i][j] == 0) {
-					g.drawImage(ResourceManager.getImage(P1Game.POTION), (j*16) +8, (i*16)+50);
+				if(p1.maze[i][j] == 2) {
+					g.drawImage(ResourceManager.getImage(P1Game.POTION).getScaledCopy(16, 16), (j*16) +8, (i*16)+50);
 				}
 			}
-		}
-		
-		
-		
+		}	
+		g.drawImage(ResourceManager.getImage(P1Game.PLAYER).getScaledCopy(18, 18),playermovex, playermovey);
 	}
 
 	@Override
@@ -106,7 +103,8 @@ public class Level1 extends BasicGameState {
 			// move left
 		}
 	}
-
+	
+	
 	private void listenForCheatCode(Input input, StateBasedGame game) {
 		if(input.isKeyDown(Input.KEY_Q)) {
 			// TODO move to next level
@@ -119,4 +117,12 @@ public class Level1 extends BasicGameState {
 		return  p1.lEVEL1;
 	}
 
+	private void tryMove(int move) {
+		if(move == 3) {
+			
+			
+		}
+		
+	}
+	
 }
