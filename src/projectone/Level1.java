@@ -2,6 +2,7 @@ package projectone;
 
 import jig.ResourceManager;
 import jig.Vector;
+import projectone.P1Game.Moves;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -15,7 +16,8 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 
-public class Level1 extends BasicGameState {
+public class Level1 extends BasicGameState 
+{
 
 	Player player;
 	P1Game p1;
@@ -29,19 +31,28 @@ public class Level1 extends BasicGameState {
 	int currentnodey;	
 	int nextnode; 
 	
+	int tileup;
+	int tiledown;
+	int tileright;
+	int tileleft;
+	
 	int nodewidth = 16;
 	int nodeheight = 16;
+	int tilex;
+	int tiley;
 	
 	float playermovex; // set these
 	float playermovey;
 	
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+	public void init(GameContainer container, StateBasedGame game) throws SlickException 
+	{
 			
 	}
 	
 	@Override
-	public void enter(GameContainer container, StateBasedGame game) {
+	public void enter(GameContainer container, StateBasedGame game) 
+	{
 		
 		p1 = (P1Game)game;
 		container.setSoundOn(true);
@@ -50,6 +61,8 @@ public class Level1 extends BasicGameState {
 		mazeheigth = p1.MAZEHEIGHTH;
 		currentnodex = 14;
 		currentnodey = 23;
+		tilex = currentnodex;
+		tiley = currentnodey;
 		
 		playermovex = 232;
 		playermovey = 424;
@@ -67,7 +80,6 @@ public class Level1 extends BasicGameState {
 			for(int j=0;j < mazewidth; j++){
 				if(p1.maze[i][j]==1){
 					g.drawImage(ResourceManager.getImage(P1Game.STUMP_NODE).getScaledCopy(16, 16), (j*16) +8, (i*16)+50);
-
 				}
 			}
 		}
@@ -87,42 +99,66 @@ public class Level1 extends BasicGameState {
 		// TODO Auto-generated method stub
 		Input input = container.getInput();
 		p1 = (P1Game)game;
+		
+		
+	
+		
+		tileup=currentnodey-1;
+		tiledown=currentnodey+1;
+		tileright=currentnodex+1;
+		tileleft=currentnodex;
 
 		listenForCheatCode(input, game);
 		// TODO player controls:
-		if(input.isKeyDown(Input.KEY_D)) {
-			// move right
+		if(input.isKeyDown(Input.KEY_D))
+		{
+			System.out.println("player move right");
+			p1.move = Moves.RIGHT;
 		}
-		if(input.isKeyDown(Input.KEY_S)) {
-			//move down
+		if(input.isKeyDown(Input.KEY_S))
+		{
+			p1.move = Moves.DOWN;
 		}
-		if(input.isKeyDown(Input.KEY_W)) {
-			// move up 
+		if(input.isKeyDown(Input.KEY_W))
+		{
+			p1.move = Moves.UP;
 		}
-		if(input.isKeyDown(Input.KEY_A)) {
-			// move left
+		if(input.isKeyDown(Input.KEY_A)) 
+		{
+			p1.move = Moves.LEFT;
 		}
 	}
 	
 	
-	private void listenForCheatCode(Input input, StateBasedGame game) {
-		if(input.isKeyDown(Input.KEY_Q)) {
-			// TODO move to next level
+	private void listenForCheatCode(Input input, StateBasedGame game)
+	{
+		if(input.isKeyDown(Input.KEY_Q)) 
+		{
+			p1.enterState(P1Game.lEVEL2);
 		}
 	}
 
+
+	private void tryMove(int move) 
+	{
+		if(move == 3) 
+		{
+			System.out.println("move = 3");
+
+			if(p1.maze[tilex][tiley] == 6)
+			{
+				System.out.println("maze x y  = 6");
+				return;
+			}
+		}
+		
+	}
 	@Override
-	public int getID() {
+	public int getID() 
+	{
 		// TODO Auto-generated method stub
 		return  p1.lEVEL1;
 	}
 
-	private void tryMove(int move) {
-		if(move == 3) {
-			
-			
-		}
-		
-	}
 	
 }

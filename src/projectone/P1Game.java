@@ -27,7 +27,6 @@ public class P1Game extends StateBasedGame{
 	
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
 	public static final String PLAYER = "projectone/resource/player.png";
-	public static final String MAZE = "projectone/resource/pacmanexample.png";
 	public static final String POTION = "projectone/resource/redpotion.png";
 	public final int MAZEWIDTH = 28;
 	public final int MAZEHEIGHTH = 31; 
@@ -35,6 +34,14 @@ public class P1Game extends StateBasedGame{
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 	
+	enum Moves {
+		  UP,
+		  DOWN,
+		  LEFT,
+		  RIGHT
+		}
+	
+	public Moves move;
 	
 	Player player;
 	Monster monster; 
@@ -42,8 +49,8 @@ public class P1Game extends StateBasedGame{
 		
 	// the typical pacman maze (31 x 28):
 	// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
-	int maze[][] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int maze[][] = 
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
 			{1,2,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,2,1},
@@ -78,8 +85,8 @@ public class P1Game extends StateBasedGame{
 	//31 x 28:	
 	int mazetemp[][] = new int[MAZEHEIGHTH][MAZEWIDTH];
 
-	int maze2[][]={
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int maze2[][]=
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1},
 			{1,2,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,2,1},
@@ -114,8 +121,8 @@ public class P1Game extends StateBasedGame{
 	
 	int maze2Temp[][]= new int[MAZEHEIGHTH][MAZEWIDTH];
 	
-	int maze2cando[][] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int maze2cando[][] = 
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1},
 			{1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1},
@@ -148,8 +155,8 @@ public class P1Game extends StateBasedGame{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}	
 	};
 	
-	int mazecando[][] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int mazecando[][] = 
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
@@ -184,7 +191,8 @@ public class P1Game extends StateBasedGame{
 	};
 	
 	//////
-	public P1Game(String title, int width, int height) {
+	public P1Game(String title, int width, int height) 
+	{
 		super(title);
 		ScreenHeight = height;
 		ScreenWidth = width;		
@@ -192,9 +200,12 @@ public class P1Game extends StateBasedGame{
 	}
 
 	@Override
-	public void initStatesList(GameContainer container) throws SlickException {
+	public void initStatesList(GameContainer container) throws SlickException 
+	{
 		addState(new StartUpState());
 		addState(new Level1());
+		addState(new Level2());
+		addState(new Level3());
 		addState(new SceneTransition());
 		addState(new GameOverState());
 		
@@ -202,26 +213,29 @@ public class P1Game extends StateBasedGame{
 		
 		ResourceManager.loadImage(STUMP_NODE);
 		ResourceManager.loadImage(POTION);
-		ResourceManager.loadImage(PLAYER);
-		ResourceManager.loadImage(MAZE);
+		ResourceManager.loadImage(PLAYER);		
 		
-		
-		for(int i=0;i<MAZEHEIGHTH;i++){
-			for(int j=0;j<MAZEWIDTH;j++){
+		for(int i=0;i<MAZEHEIGHTH;i++)
+		{
+			for(int j=0;j<MAZEWIDTH;j++)
+			{
 				mazetemp[i][j]=maze[i][j];
 				maze2Temp[i][j]=maze2[i][j];
 			}
 		}		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		AppGameContainer app;
-		try {
+		try 
+		{
 			app = new AppGameContainer(new P1Game("Project One", 448, 576));
 			app.setDisplayMode(448, 576, false);
 			app.setVSync(true);
 			app.start();
-		} catch (SlickException e) {
+		} catch (SlickException e) 
+		{
 			e.printStackTrace();
 		}
 	}	

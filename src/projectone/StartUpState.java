@@ -12,22 +12,27 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 
-class StartUpState extends BasicGameState{
+class StartUpState extends BasicGameState
+{
 	P1Game p1;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
+			throws SlickException 
+	{
+		
 	}
 	
 	@Override
-	public void enter(GameContainer container, StateBasedGame game) {
+	public void enter(GameContainer container, StateBasedGame game) 
+	{
 		container.setSoundOn(true);
 		p1 = (P1Game)game;
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
-			Graphics g) throws SlickException {
+			Graphics g) throws SlickException 
+	{
 		P1Game p1 = (P1Game)game;
 		
 		//TODO add splash here
@@ -43,8 +48,8 @@ class StartUpState extends BasicGameState{
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
-
+			int delta) throws SlickException 
+	{
 		Input input = container.getInput();
 		
 		if (input.isKeyDown(Input.KEY_SPACE))
@@ -55,7 +60,8 @@ class StartUpState extends BasicGameState{
 	
 	
 	@Override
-	public int getID() {
+	public int getID() 
+	{
 		return p1.STARTUPSTATE;  // resource manager.
 	}
 }
