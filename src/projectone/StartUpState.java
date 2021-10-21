@@ -33,6 +33,7 @@ class StartUpState extends BasicGameState
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException 
 	{
+	
 		P1Game p1 = (P1Game)game;
 		
 		//TODO add splash here
@@ -54,14 +55,13 @@ class StartUpState extends BasicGameState
 		
 		if (input.isKeyDown(Input.KEY_SPACE))
 		  p1.enterState(P1Game.lEVEL1);	
-		
-		p1.player.update(delta);
+   		  p1.player.update(delta);
 	}
 	
 	
 	@Override
 	public int getID() 
 	{
-		return p1.STARTUPSTATE;  // resource manager.
+		return P1Game.STARTUPSTATE;  // resource manager.
 	}
 }

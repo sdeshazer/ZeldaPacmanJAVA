@@ -28,11 +28,18 @@ public class P1Game extends StateBasedGame{
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
 	public static final String PLAYER = "projectone/resource/player.png";
 	public static final String POTION = "projectone/resource/redpotion.png";
+	public static final String DEBUG = "projectone/resource/pacmanexample.png";
 	public final int MAZEWIDTH = 28;
 	public final int MAZEHEIGHTH = 31; 
 	
 	public final int ScreenWidth;
 	public final int ScreenHeight;
+	
+	public int previousnode = 0;
+	public int nextnode = 0;
+	
+	public int score; 
+	public int health; // 3 hearts
 	
 	enum Moves {
 		  UP,
@@ -62,9 +69,9 @@ public class P1Game extends StateBasedGame{
 			{1,1,1,1,1,1,0,1,1,1,1,1,3,1,1,3,1,1,1,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,1,1,1,3,1,1,3,1,1,1,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,1,1},
-			{1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1},
+			{1,1,1,1,1,1,0,1,1,3,1,1,1,0,0,1,1,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
-			{3,6,3,3,3,3,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,3,3,3,3,5,3},//mid
+			{3,6,3,3,3,3,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,3,3,3,3,3,3},//mid
 			{1,1,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,1,1},
@@ -98,7 +105,7 @@ public class P1Game extends StateBasedGame{
 			{1,0,0,0,0,0,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,0,1},
-			{1,0,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
+			{1,0,1,1,1,1,0,1,1,3,1,1,1,0,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
 			{1,0,0,0,0,0,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,1,1,1,1,0,1},//mid
 			{1,0,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,0,1},
@@ -213,7 +220,10 @@ public class P1Game extends StateBasedGame{
 		
 		ResourceManager.loadImage(STUMP_NODE);
 		ResourceManager.loadImage(POTION);
-		ResourceManager.loadImage(PLAYER);		
+		ResourceManager.loadImage(PLAYER);	
+		ResourceManager.loadImage(DEBUG);
+		score = 0;
+
 		
 		for(int i=0;i<MAZEHEIGHTH;i++)
 		{
