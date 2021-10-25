@@ -16,7 +16,7 @@ import projectone.SceneTransition;
 import projectone.StartUpState;
 
 
-public class Game extends StateBasedGame{
+public class P1Game extends StateBasedGame{
 	
 	public static final int STARTUPSTATE = 0;
 	public static final int lEVEL1 = 1;
@@ -27,22 +27,37 @@ public class Game extends StateBasedGame{
 	
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
 	public static final String PLAYER = "projectone/resource/player.png";
-	public static final String PACMAZE = "projectone/resource/pacmanexample.png";
+	public static final String POTION = "projectone/resource/redpotion.png";
+	public static final String DEBUG = "projectone/resource/pacmanexample.png";
 	public final int MAZEWIDTH = 28;
 	public final int MAZEHEIGHTH = 31; 
 	
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 	
+	public int previousnode = 0;
+	public int nextnode = 0;
+	
+	public int score; 
+	public int health; // 3 hearts
+	
+	enum Moves {
+		  UP,
+		  DOWN,
+		  LEFT,
+		  RIGHT
+		}
+	
+	public Moves move;
+	
 	Player player;
 	Monster monster; 
 	
-	
-	
+		
 	// the typical pacman maze (31 x 28):
 	// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
-	int maze[][] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int maze[][] = 
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
 			{1,2,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,2,1},
@@ -54,9 +69,9 @@ public class Game extends StateBasedGame{
 			{1,1,1,1,1,1,0,1,1,1,1,1,3,1,1,3,1,1,1,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,1,1,1,3,1,1,3,1,1,1,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,1,1},
-			{1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1},
+			{1,1,1,1,1,1,0,1,1,3,1,1,1,0,0,1,1,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
-			{3,6,3,3,3,3,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,3,3,3,3,5,3},//midpoint
+			{3,6,3,3,3,3,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,3,3,3,3,3,3},//mid
 			{1,1,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,1,1},
@@ -77,8 +92,8 @@ public class Game extends StateBasedGame{
 	//31 x 28:	
 	int mazetemp[][] = new int[MAZEHEIGHTH][MAZEWIDTH];
 
-	int maze2[][]={
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int maze2[][]=
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1},
 			{1,2,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,2,1},
@@ -90,9 +105,9 @@ public class Game extends StateBasedGame{
 			{1,0,0,0,0,0,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,0,1},
-			{1,0,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
+			{1,0,1,1,1,1,0,1,1,3,1,1,1,0,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
 			{1,0,0,0,0,0,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,0,0,0,0,0,1},
-			{1,0,1,1,1,1,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,1,1,1,1,0,1},//midpoint
+			{1,0,1,1,1,1,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,1,1,1,1,0,1},//mid
 			{1,0,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,0,1},
 			{1,0,0,0,0,0,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,0,0,0,0,0,1},
@@ -113,8 +128,8 @@ public class Game extends StateBasedGame{
 	
 	int maze2Temp[][]= new int[MAZEHEIGHTH][MAZEWIDTH];
 	
-	int maze2cando[][] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int maze2cando[][] = 
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1},
 			{1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1},
@@ -128,7 +143,7 @@ public class Game extends StateBasedGame{
 			{1,0,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,0,1},
 			{1,0,0,0,0,0,0,1,1,0,1,3,3,3,0,3,3,1,0,1,1,0,0,0,0,0,0,1},
-			{1,0,1,1,1,1,0,0,0,0,1,3,3,3,0,3,3,1,0,0,0,0,1,1,1,1,0,1},//midpoint
+			{1,0,1,1,1,1,0,0,0,0,1,3,3,3,0,3,3,1,0,0,0,0,1,1,1,1,0,1},//mid
 			{1,0,1,1,1,1,0,1,1,0,1,3,3,3,3,3,3,1,0,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1},
 			{1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
@@ -147,8 +162,8 @@ public class Game extends StateBasedGame{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}	
 	};
 	
-	int mazecando[][] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	int mazecando[][] = 
+		{	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
@@ -162,7 +177,7 @@ public class Game extends StateBasedGame{
 			{1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1},
-			{0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0},//midpoint
+			{0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0},//mid
 			{1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1},
@@ -183,7 +198,8 @@ public class Game extends StateBasedGame{
 	};
 	
 	//////
-	public Game(String title, int width, int height) {
+	public P1Game(String title, int width, int height) 
+	{
 		super(title);
 		ScreenHeight = height;
 		ScreenWidth = width;		
@@ -191,34 +207,45 @@ public class Game extends StateBasedGame{
 	}
 
 	@Override
-	public void initStatesList(GameContainer container) throws SlickException {
-		//addState(new StartUpState());
+	public void initStatesList(GameContainer container) throws SlickException 
+	{
+		addState(new StartUpState());
 		addState(new Level1());
+		addState(new Level2());
+		addState(new Level3());
 		addState(new SceneTransition());
 		addState(new GameOverState());
 		
 		player = new Player(ScreenHeight - 148, ScreenWidth/2 -100,0,0);
 		
 		ResourceManager.loadImage(STUMP_NODE);
-		ResourceManager.loadImage(PLAYER);
-		ResourceManager.loadImage(PACMAZE);
+		ResourceManager.loadImage(POTION);
+		ResourceManager.loadImage(PLAYER);	
+		ResourceManager.loadImage(DEBUG);
+		score = 0;
+
 		
-		for(int v=0;v<MAZEHEIGHTH;v++){
-			for(int z=0;z<MAZEWIDTH;z++){
-				mazetemp[v][z]=maze[v][z];
-				maze2Temp[v][z]=maze2[v][z];
+		for(int i=0;i<MAZEHEIGHTH;i++)
+		{
+			for(int j=0;j<MAZEWIDTH;j++)
+			{
+				mazetemp[i][j]=maze[i][j];
+				maze2Temp[i][j]=maze2[i][j];
 			}
 		}		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		AppGameContainer app;
-		try {
-			app = new AppGameContainer(new Game("Project One", 448, 576));
+		try 
+		{
+			app = new AppGameContainer(new P1Game("Project One", 448, 576));
 			app.setDisplayMode(448, 576, false);
 			app.setVSync(true);
 			app.start();
-		} catch (SlickException e) {
+		} catch (SlickException e) 
+		{
 			e.printStackTrace();
 		}
 	}	
