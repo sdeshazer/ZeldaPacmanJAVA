@@ -24,218 +24,208 @@ public class Monster extends Entity
 	public int key = 0;
 	public int state = 0;
 	public boolean dead = false;
-	
+
 	Stack<Node> stack = new Stack<Node>();
 	public Node node = null;
-	 
-	
+
+
 	public void update(final int delta) 
 	{
 		translate(velocity.scale(delta));
 	}
-	
-	
+
+
 	public Monster(final float x, final float y) 
 	{
 		super(x,y);
-		//todo add image here
+		//TODO add image here
 		addImageWithBoundingBox(ResourceManager.getImage(P1Game.MONSTERG));
 	}
-	
-	
-	//dijkstra's algorithm : 
-	public Node shortestPath(int x, int y, int destx, int desty, int maze[][], P1Game p1) 
+
+
+	// checks if the index of the array is an open node
+	private int checkOpenNodeAndGetIndex(ArrayList<Node> openNodes, int tileY, int tileX)
 	{
-		int graph[][] = new int[p1.MAZEHEIGHTH][p1.MAZEWIDTH];
-		
-		for(int i = 0; i < p1.MAZEHEIGHTH; i++) 
+		for(int i = 0; i < openNodes.size(); i++)
 		{
-			for(int j = 0; j < p1.MAZEWIDTH; j++ ) 
-			{
-				graph[i][j] = maze[i][j];
-			}
+			Node openNode = openNodes.get(i);
+			if(openNode.tileIndex.y == tileY && openNode.tileIndex.x == tileX)
+				return i;
 		}
-		
+		return -1;
+	}
+
+
+
+	private boolean isClosed(ArrayList<Node> closedNodes, TileIndex tileIndex)
+	{
+		for(int i = 0; i < closedNodes.size(); i++)
+		{
+			Node closedNode = closedNodes.get(i);
+			if(closedNode.tileIndex == tileIndex)
+				return true;
+		}
+		return false;
+	}
+
+	
+	// make each directional node a child of the current node.
+	private Node makeCornerNodeChildofCurrentAndAddCost(Node current, Node cornerNode)
+	{
+		cornerNode.cost = current.cost + 1;	
+		cornerNode.parent = current;
+		return cornerNode;
+	}
+	
+	// check if tiles match within the open list, if they do, compare cost and
+	// add the node to the open list if the cost is less than the current.
+	private ArrayList<Node> checkCostToAddToOpenList(ArrayList<Node> openNodes, Node cornerNode)
+	{
+		for(int i = 0; i < openNodes.size(); i++) 
+		{
+			if(openNodes.get(i).tileIndex.x == cornerNode.tileIndex.x 
+					&& openNodes.get(i).tileIndex.y == cornerNode.tileIndex.y) 
+			{
+				if(openNodes.get(i).cost > cornerNode.cost) 
+				{
+					openNodes.remove(i);
+					openNodes.add(cornerNode);
+				}
+				break;
+			}
+		}	
+		return openNodes;	
+	}
+
+
+	
+	//dijkstra's path finding: 
+	public Node shortestPath( int currentTileY, int currentTileX, int destX, int destY, int maze[][], P1Game p1) 
+	{
+
 		ArrayList<Node> path = new ArrayList<Node>();
-		ArrayList<Node> queue = new ArrayList<Node>();
-		
-		int minCost = 1;
-		int pop = 0;
-		Node root = new Node();
-		
-		root.x = x;
-		root.y = y;
-		root.cost = 0;
-		root.parent = null;
-		
-		queue.add(root);
-		
-		graph[y][x] = -1;
-		
-		while(queue.isEmpty() == false) 
+		ArrayList<Node> openNodes = new ArrayList<Node>();
+		ArrayList<Node> closedNodes = new ArrayList<Node>();
+
+
+		Node startNode = new Node();
+
+		startNode.tileIndex.y = currentTileY;
+		startNode.tileIndex.x = currentTileX;
+		startNode.cost = 0;
+		startNode.parent = null;
+
+		openNodes.add(startNode);
+
+		while(!openNodes.isEmpty()) 
 		{
 			Node currentNode = new Node();
-			minCost = 300;
-			for(int i = 0; i< queue.size(); i++) 
+			int minCost = Integer.MAX_VALUE;
+			int minIndex = 0;
+
+			for(int i = 0; i < openNodes.size(); i++) 
 			{
-				if(queue.get(i).cost < minCost) 
+				if(openNodes.get(i).cost < minCost) 
 				{
-					minCost = queue.get(i).cost;
-					pop = i;
+					minCost = openNodes.get(i).cost;
+					minIndex = i;
 				}
 			}
-			currentNode = queue.remove(pop);
+
+			currentNode = openNodes.remove(minIndex);
 			// we check if the current node is the destination
-			if(currentNode.x == destx && currentNode.y == desty) 
+			if(currentNode.tileIndex.y == destY && currentNode.tileIndex.x == destX) 
 			{
 				return(currentNode);
 			}
-			
-			// otherwise we look at the next tiles in the graph:
-			if(graph[currentNode.y][currentNode.x + 1] == 0) 
+
+			ArrayList<TileIndex> neighboringTileIndecies = new ArrayList<TileIndex>();
+
+			neighboringTileIndecies.add(new TileIndex(currentNode.tileIndex.y, currentNode.tileIndex.x + 1));
+			neighboringTileIndecies.add(new TileIndex(currentNode.tileIndex.y, currentNode.tileIndex.x - 1));
+			neighboringTileIndecies.add(new TileIndex(currentNode.tileIndex.y + 1, currentNode.tileIndex.x));
+			neighboringTileIndecies.add(new TileIndex(currentNode.tileIndex.y - 1, currentNode.tileIndex.x));
+
+			for(int i = 0; i < neighboringTileIndecies.size(); i++)
 			{
-				Node node1 = new Node();
-				// looking at next x :
-				node1.x = currentNode.x +1;
-				node1.y = currentNode.y;
-				// set the parent to the node we are searching from and
-				// increment the cost by 1:
-				node1.parent = currentNode;
-				node1.cost = currentNode.cost + 1;
-				
-				// we add this node as visited:
-				graph[node1.y][node1.x] = -1 ;
-				queue.add(node1);
+				// skipping nodes we know are already closed:
+				if(isClosed(closedNodes, neighboringTileIndecies.get(i)))
+				{
+					continue;
+				}
+				TileIndex tileIndex = neighboringTileIndecies.get(i);
+
+				//check for out of bounds.
+				if(tileIndex.y > p1.MAZEHEIGHTH)
+					break;
+
+				if(tileIndex.x > p1.MAZEWIDTH)
+					break;
+
+				//skipping nodes we know have collision:
+				if(maze[tileIndex.y][tileIndex.x] == 1) 
+				{
+					continue;
+				}			
 			}
-			else if(graph[currentNode.y][currentNode.x+1] == -1) 
+
+			// if we don't have an open node, the index returns -1
+			if(checkOpenNodeAndGetIndex(openNodes, currentNode.tileIndex.y, currentNode.tileIndex.x) != -1) 
 			{
-				Node node1 = new Node();
-				node1.x = currentNode.x + 1;
-				node1.y = currentNode.y;
-				node1.parent = currentNode;
-				node1.cost = currentNode.cost +1;
-				
-				for(int i = 0; i < queue.size(); i++) 
-				{
-					if(queue.get(i).x == node1.x && queue.get(i).y == node1.y) 
-					{
-						if(queue.get(i).cost > node1.cost) 
-						{
-							
-								queue.remove(i);
-								queue.add(node1);
-							}
-							break;
-						}
-					}
-				}
-				if(graph[currentNode.y][currentNode.x -1] == 0) 
-				{
-					Node node2 = new Node();
-					 node2.x = currentNode.x-1;
-					 node2.y= currentNode.y;
-					 node2.parent = currentNode;
-					 node2.cost = currentNode.cost + 1;
-					 graph[node2.y][node2.x] = -1;
-					 queue.add(node2);
-					
-				}
-				else if (graph[currentNode.y][currentNode.x -1] == -1) 
-				{
-					Node node2 = new Node();
-					node2.x = currentNode.x - 1;
-					node2.y = currentNode.y;
-					node2.parent = currentNode;
-					node2.cost = currentNode.cost +1;
-					
-					for(int i = 0; i < queue.size(); i++) 
-					{
-						if(queue.get(i).x == node2.x && queue.get(i).y == node2.y) 
-						{
-							if(queue.get(i).cost > node2.cost) 
-							{
-								queue.remove(i);
-								queue.add(node2);
-							}
-							break;
-						}
-					}
-					
-				}
-				
-				if(graph[currentNode.y +1][currentNode.x] == 0) 
-				{
-					Node node3 = new Node();
-					node3.x = currentNode.x;
-					node3.y = currentNode.y + 1;
-					node3.parent = currentNode;
-					node3.cost = currentNode.cost + 1;
-					graph[node3.y][node3.x] = -1;
-					queue.add(node3);
-				}
-				else if(graph[currentNode.y +1 ][currentNode.x] == -1) 
-				{
-					Node node3 = new Node();
-					node3.x = currentNode.x;
-					node3.y = currentNode.y+1;
-					node3.parent = currentNode;
-					node3.cost = currentNode.cost + 1;
-					
-					for(int i = 0; i < queue.size(); i++) 
-					{
-						if(queue.get(i).x == node3.x && queue.get(i).y == node3.y) 
-						{
-							if(queue.get(i).cost > node3.cost) 
-							{
-								queue.remove(i);
-								queue.add(node3);
-							}
-							break;
-						}
-					}
-				}
-				if(graph[currentNode.y - 1][currentNode.x] == 0) 
-				{
-					Node node4 = new Node();
-					node4.x = currentNode.x;
-					node4.y = currentNode.y - 1;
-					node4.parent = currentNode;
-					node4.cost = currentNode.cost + 1;
-					graph[node4.y][node4.x] = -1;
-					queue.add(node4);
-				}
-				else if (graph[currentNode.y -1][currentNode.x] == -1) 
-				{
-					Node node4 = new Node();
-					node4.x = currentNode.x;
-					node4.y = currentNode.y -1;
-					node4.parent = currentNode;
-					node4.cost = currentNode.cost + 1;
-					
-					for(int i = 0; i < queue.size(); i++) 
-					{
-						if(queue.get(i).x == node4.x && queue.get(i).y == node4.y) 
-						{
-							if(queue.get(i).cost > node4.cost) 
-							{
-								queue.remove(i);
-								queue.add(node4);
-							}
-							break;
-						}
-					}
-				}
-				path.add(currentNode);	
+				Node nodeRight = new Node();
+				Node nodeLeft = new Node();
+				Node nodeUp = new Node();
+				Node nodeDown = new Node();
+
+				// make each corner node a child of the current node and increment
+				// the cost of the corner node to be the current cost + 1
+				nodeRight = makeCornerNodeChildofCurrentAndAddCost(currentNode, nodeRight);
+				nodeLeft = makeCornerNodeChildofCurrentAndAddCost(currentNode, nodeLeft);
+				nodeUp = makeCornerNodeChildofCurrentAndAddCost(currentNode, nodeUp);
+				nodeDown = makeCornerNodeChildofCurrentAndAddCost(currentNode, nodeDown);
+
+				int currentY = currentNode.tileIndex.y;
+				int currentX = currentNode.tileIndex.x;
+
+
+				nodeRight.tileIndex.y = currentY;
+				nodeRight.tileIndex.x = currentX + 1;
+
+				nodeLeft.tileIndex.y = currentY;
+				nodeLeft.tileIndex.x = currentX - 1;
+
+				nodeUp.tileIndex.y = currentY - 1;
+				nodeUp.tileIndex.x = currentX;
+
+				nodeDown.tileIndex.y = currentY + 1;
+				nodeDown.tileIndex.x = currentX;
+
+				// update the openNodes list for each cornerNode depending on the Cost.
+				openNodes = checkCostToAddToOpenList(openNodes, nodeRight);
+				openNodes = checkCostToAddToOpenList(openNodes, nodeLeft);
+				openNodes = checkCostToAddToOpenList(openNodes, nodeUp);
+				openNodes = checkCostToAddToOpenList(openNodes, nodeDown);
+			}
 		}
-			return(path.get(path.size() -1));
+
+		//add all openNodes to the list of nodes to traverse:
+		int openNodeIndex = 0;
+		Node currentNode = new Node();
+		while( currentNode != startNode) 
+		{	
+			currentNode = openNodes.get(openNodeIndex++);
+			path.add(currentNode);
+		}
+
+		return(path.get(path.size() - 1));
 	}
-	
-	
-		
+
+
+
 	public Stack<Node> getstack(Node n)
 	{
 		Stack<Node> tempstack = new Stack<Node>();
-		
+
 		while(n!=null)
 		{
 			tempstack.add(n);
@@ -244,9 +234,9 @@ public class Monster extends Entity
 		tempstack.pop();
 		return(tempstack);
 	}
-	
-	
-	
+
+
+
 	private void move(P1Game p1 , int maze[][]) 
 	{	
 		if(desired == 3) 
@@ -323,92 +313,6 @@ public class Monster extends Entity
 		} 
 		return;
 	}
-	
-	
-	//TODO follow maze param here for all paths per maze.  
-	public void choice(int mazex, int mazey, int maze[][], P1Game p1) 
-	{
-		
-		if(state == 0) 
-		{	
-			stack = this.getstack(this.shortestPath(currenttilex, currenttiley, mazex, mazey, maze, p1));
-			if(!stack.isEmpty()) 
-			{
-				node = stack.pop();
-			}
-			
-			if(currenttiley - node.y == -1) 
-			{// move down
-				desired = 2;
-				this.move(p1, maze);
-			}
-			if(currenttiley - node.y == 1) 
-			{// move up
-				desired = 1;
-				this.move(p1, maze);
-			}
-			if(currenttilex - node.x == -1) 
-			{// move right
-				desired = 4;
-				this.move(p1,maze);
-			}
-			if(currenttilex - node.x == 1) 
-			{// move left
-				desired = 3; 
-				this.move(p1, maze);
-			}
-		}
-		if(state == 1) 
-		{
-			if(check > 0)
-			{
-				monstermovex -= 1;
-				check-=1;
-				p1.monster.setX(monstermovex);
-			}
-			else
-			{
-				state = 0;
-				currenttilex = nexttilex;
-			}
-		}
-		if(state == 2)
-		{
-			if(check > 0) 
-			{
-				monstermovex +=1;
-				check -=1;
-				p1.monster.setX(monstermovex);
-			}
-		}
-		if(state == 3)
-		{
-			if(check>0)
-			{
-				monstermovey -=1;
-				check -= 1;
-				p1.monster.setY(monstermovey);
-			}
-			else
-			{
-				state = 0;
-				currenttiley = nexttiley;
-			}
-		}
-		if(state == 4)
-		{
-			if(check >0)
-			{
-				monstermovey +=1;
-				check -= 1;
-				p1.monster.setY(monstermovey);
-			}
-			else
-			{
-				state = 0;
-				currenttiley = nexttiley;
-			}
-		}
-	}		
+
 }
 
