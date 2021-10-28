@@ -1,9 +1,6 @@
 ## Resolved Issues ##
 
 - **[0]** Need a skeletal, executable game
-
-
-## Open Issues ##
 - **[1]** Add game states
 - **[2]** Add Player with controls
 - **[3]** Add traversable map
@@ -13,6 +10,9 @@
 - **[7]** Add Monsters
 - **[9]** Add path planning for Monsters
 - **[10]** Allow monsters and player to attack
-- **[11]** Add a health meter for player
 - **[12]** Add CheatCode
 - **[13]** Add assets, sounds, extra controls
+
+## Open Issues ##
+- **[11]** Add a health meter for player
+- **[14]** Ability to attack monsters
