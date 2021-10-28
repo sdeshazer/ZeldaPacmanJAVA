@@ -16,11 +16,12 @@ import projectone.SceneTransition;
 import projectone.StartUpState;
 
 
-public class P1Game extends StateBasedGame{
+public class P1Game extends StateBasedGame
+{
 	
 	public static final int STARTUPSTATE = 0;
 	public static final int lEVEL1 = 1;
-	public static final int lEVEL2 = 2;
+	public static final int LEVEL2 = 2;
 	public static final int lEVEL3 = 3;
 	public static final int GAMEOVERSTATE = 4;
 	public static final int STATETRANSITION = 5;
@@ -28,7 +29,8 @@ public class P1Game extends StateBasedGame{
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
 	public static final String PLAYER = "projectone/resource/player.png";
 	public static final String POTION = "projectone/resource/redpotion.png";
-	public static final String DEBUG = "projectone/resource/pacmanexample.png";
+	public static final String MONSTERG = "projectone/resource/monster-green.png";
+
 	public final int MAZEWIDTH = 28;
 	public final int MAZEHEIGHTH = 31; 
 	
@@ -41,14 +43,7 @@ public class P1Game extends StateBasedGame{
 	public int score; 
 	public int health; // 3 hearts
 	
-	enum Moves {
-		  UP,
-		  DOWN,
-		  LEFT,
-		  RIGHT
-		}
-	
-	public Moves move;
+
 	
 	Player player;
 	Monster monster; 
@@ -62,7 +57,7 @@ public class P1Game extends StateBasedGame{
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
 			{1,2,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,2,1},
 			{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1},
 			{1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1},
 			{1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1},
@@ -71,8 +66,8 @@ public class P1Game extends StateBasedGame{
 			{1,1,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,1,1,0,0,1,1,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
-			{3,6,3,3,3,3,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,3,3,3,3,3,3},//mid
-			{1,1,1,1,1,1,0,1,1,3,1,3,3,3,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
+			{1,3,3,3,3,3,0,3,3,3,1,3,3,3,3,3,3,1,3,3,3,0,3,3,3,3,3,1},//mid
+			{1,1,1,1,1,1,0,1,1,3,1,3,3,6,3,3,3,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,3,3,3,3,3,3,3,3,3,1,1,0,1,1,1,1,1,1},
 			{1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1},
@@ -216,15 +211,15 @@ public class P1Game extends StateBasedGame{
 		addState(new SceneTransition());
 		addState(new GameOverState());
 		
-		player = new Player(ScreenHeight - 148, ScreenWidth/2 -100,0,0);
+		//player = new Player(ScreenHeight - 148, ScreenWidth/2 -100,0,0);
 		
 		ResourceManager.loadImage(STUMP_NODE);
 		ResourceManager.loadImage(POTION);
 		ResourceManager.loadImage(PLAYER);	
-		ResourceManager.loadImage(DEBUG);
+		ResourceManager.loadImage(MONSTERG);
+
 		score = 0;
 
-		
 		for(int i=0;i<MAZEHEIGHTH;i++)
 		{
 			for(int j=0;j<MAZEWIDTH;j++)
@@ -235,6 +230,7 @@ public class P1Game extends StateBasedGame{
 		}		
 	}
 	
+	
 	public static void main(String[] args) 
 	{
 		AppGameContainer app;
@@ -244,7 +240,8 @@ public class P1Game extends StateBasedGame{
 			app.setDisplayMode(448, 576, false);
 			app.setVSync(true);
 			app.start();
-		} catch (SlickException e) 
+		} 
+		catch (SlickException e) 
 		{
 			e.printStackTrace();
 		}

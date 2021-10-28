@@ -55,7 +55,7 @@ class StartUpState extends BasicGameState
 		
 		if (input.isKeyDown(Input.KEY_SPACE))
 		  p1.enterState(P1Game.lEVEL1);	
-   		  p1.player.update(delta);
+   		  
 	}
 	
 	
