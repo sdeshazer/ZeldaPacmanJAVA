@@ -54,7 +54,7 @@ class StartUpState extends BasicGameState
 		Input input = container.getInput();
 		
 		if (input.isKeyDown(Input.KEY_SPACE))
-		  p1.enterState(P1Game.lEVEL1);	
+		  p1.enterState(P1Game.LEVEL1);	
    		  
 	}
 	

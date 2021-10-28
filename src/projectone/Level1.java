@@ -90,8 +90,8 @@ public class Level1 extends BasicGameState {
 	{
 		// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
 		// drawing stumps here
-		g.drawString("Score: " + p1.score, 300, 30);
-		Circle circle = new Circle(1, 1, 1);
+		g.drawString("Score: " + p1.score, p1.ScreenWidth - 150, p1.ScreenHeight - 70);
+		
 		for (int i = 0; i < mazeheigth; i++) 
 		{
 			for (int j = 0; j < mazewidth; j++) 
@@ -120,9 +120,9 @@ public class Level1 extends BasicGameState {
 		{
 			for (int j = 0; j < mazewidth; j++) 
 			{
-				if (p1.maze[i][j] == 0) 
+				if (p1.maze[i][j] == 6) 
 				{
-					g.draw(circle);
+					g.drawImage(ResourceManager.getImage(P1Game.DOOR).getScaledCopy(16,16), (j * 16) , (i * 16));		
 				}
 			}
 		}
@@ -139,7 +139,7 @@ public class Level1 extends BasicGameState {
 		Input input = container.getInput();
 		p1 = (P1Game) game;
 
-		listenForCheatCode(input, game);
+		
 		// TODO player controls:
 		if(inputCoolDown <= 0) 
 		{
@@ -177,16 +177,9 @@ public class Level1 extends BasicGameState {
 		}
 		p1.monster.update(delta);
 		checkIfDead();
+		
 	}
 	
-	
-	private void listenForCheatCode(Input input, StateBasedGame game) 
-	{
-		if (input.isKeyDown(Input.KEY_Q)) 
-		{
-			p1.enterState(P1Game.LEVEL2);
-		}
-	}
 	
 	
 	private boolean checkIfDead()
@@ -209,15 +202,15 @@ public class Level1 extends BasicGameState {
 		switch(currentTile) 
 		{
 		case 0:
-			p1.score += 10;
 			p1.maze[newTileY][newTileX] = -1;
 			break;
 		case 2:
-			//TODO
-			System.out.println("TODO Collectible");
+			
+			p1.score += 100;
 			p1.maze[newTileY][newTileX] = -1;
 			break;
 		case 6:
+			p1.score += 500;
 			p1.enterState(P1Game.LEVEL2);
 			break;
 		}
@@ -267,7 +260,7 @@ public class Level1 extends BasicGameState {
 	@Override
 	public int getID() {
 		// TODO Auto-generated method stub
-		return P1Game.lEVEL1;
+		return P1Game.LEVEL1;
 	}
 
 }
