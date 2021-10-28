@@ -13,31 +13,23 @@ import jig.Vector;
 public class Monster extends Entity 
 {
 
-	private Vector velocity;
 	public int nexttile;
 	public int currenttilex = 14;
 	public int currenttiley = 11;
 	public int nexttilex = 0;
 	public int nexttiley = 0;
-	public int check = 0;
 	public float monstermovex = 232;
 	public float monstermovey = 232;
-	public int desired = 0;
-	public int current = 0;
-	public int key = 0;
-	public int state = 0;
-	public boolean dead = false;
-	
+
+
 	private Node pathNode = null;
 	
 	private float inputCoolDown = 0;
-	private float inputDelay = 300;
-
+	public float inputDelay = 300;
 
 	public void update(final int delta) 
 	{
 	
-		
 		if(inputCoolDown <= 0) 
 		{
 			if(pathNode != null)
@@ -136,7 +128,6 @@ public class Monster extends Entity
 				while( currentNode != startNode) 
 				{	
 					currentNode.successor = prevNode;
-					//p1.maze[currentNode.tileIndex.y][currentNode.tileIndex.x] = 2;
 					path.add(currentNode);
 					prevNode = currentNode;
 					currentNode = currentNode.parent;
@@ -161,7 +152,8 @@ public class Monster extends Entity
 			for(int i = 0; i < neighboringTileIndecies.size(); i++)
 			{
 				// skipping nodes we know are already closed:
-				if(isClosed(closedNodes, neighboringTileIndecies.get(i))) {
+				if(isClosed(closedNodes, neighboringTileIndecies.get(i)))
+				{
 					System.out.println("Monster neighbor is closed" );
 					continue;
 				}
