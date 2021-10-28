@@ -241,7 +241,7 @@ public class Level3 extends BasicGameState {
 			break;
 		case 6:
 			p1.score += 500;
-			p1.enterState(P1Game.LEVEL3);
+			p1.enterState(P1Game.WINSTATE);
 			break;
 		}
 	}

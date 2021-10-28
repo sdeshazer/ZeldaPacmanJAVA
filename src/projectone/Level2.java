@@ -28,7 +28,7 @@ public class Level2 extends BasicGameState {
 	private int mazeheigth;
 	
 	private int playerStartY = 23;
-	private int playerStartX = 14;
+	private int playerStartX = 15;
 	
 	private int monsterStartY = 14;
 	private int monsterStartX = 13;
@@ -95,7 +95,7 @@ public class Level2 extends BasicGameState {
 	{
 		// 0 are normally dots, 2 is an energy dot. 3 is blank, 1 is a stump
 		// drawing stumps here
-		g.drawString("Score: " + p1.score, 300, 30);
+		g.drawString("Score: " + p1.score, p1.ScreenWidth - 150, p1.ScreenHeight - 70);
 		Circle circle = new Circle(1, 1, 1);
 		for (int i = 0; i < mazeheigth; i++) 
 		{
