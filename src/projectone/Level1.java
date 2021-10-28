@@ -17,6 +17,8 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class Level1 extends BasicGameState {
+	
+	private final String TAG = "Level1";
 
 	P1Game p1;
 
@@ -25,16 +27,18 @@ public class Level1 extends BasicGameState {
 	private int mazewidth;
 	private int mazeheigth;
 	
-//	private int playerStartY = 23;
-//	private int playerStartX = 14;
 	
 	private int playerStartY = 23;
 	private int playerStartX = 14;
+	
+	private int monsterStartY = 14;
+	private int monsterStartX = 13;
 
 	private float inputDelay = 100;
 	private float inputCoolDown; 
 
 	public int monsterflag;
+	
 	
 	enum Moves 
 	{
@@ -68,11 +72,15 @@ public class Level1 extends BasicGameState {
 
 		// set initial player placement:
 		Vector startPosition = Player.convertTileToPos(playerStartY, playerStartX);
+		Vector monsterStartPosition = Player.convertTileToPos(monsterStartY, monsterStartX);
 		p1.player = new Player(startPosition.getX(), startPosition.getY(), 0, 0);
+		p1.monster = new Monster(monsterStartPosition.getX(), monsterStartPosition.getY());
 		p1.player.tileY = playerStartY;
 		p1.player.tileX = playerStartX;
+		p1.monster.currenttiley = monsterStartY;
+		p1.monster.currenttilex = monsterStartX;
 		// set initial green monster placement:
-		Monster monsterG = new Monster(232, 232);
+	  //  monster = new Monster(232, 232);
 
 	}
 
@@ -119,7 +127,7 @@ public class Level1 extends BasicGameState {
 			}
 		}
 		g.drawImage(ResourceManager.getImage(P1Game.PLAYER).getScaledCopy(16, 16), p1.player.getX(), p1.player.getY());
-		g.drawImage(ResourceManager.getImage(P1Game.MONSTERG).getScaledCopy(16, 16), 232, 232);
+		g.drawImage(ResourceManager.getImage(P1Game.MONSTERG).getScaledCopy(16, 16), p1.monster.getX(), p1.monster.getY());
 	}
 
 	
@@ -153,16 +161,22 @@ public class Level1 extends BasicGameState {
 				moved = determineMove(Moves.RIGHT);
 			}
 			
+			
 			if(moved) 
 			{
 				inputCoolDown = inputDelay;
 				checkCollectibles(p1.player.tileY, p1.player.tileX);
+				System.out.println(TAG +" current tile y for monster:" + p1.monster.currenttiley);
+				p1.monster.moveMonstertoPath(p1 , p1.maze, p1.monster.currenttiley, p1.monster.currenttilex,
+											p1.player.tileY, p1.player.tileX) ;
 			}
 		}
 		else
 		{
 			inputCoolDown -= delta;
 		}
+		p1.monster.update(delta);
+		checkIfDead();
 	}
 	
 	
@@ -174,9 +188,23 @@ public class Level1 extends BasicGameState {
 		}
 	}
 	
+	
+	private boolean checkIfDead()
+	{
+		if(p1.player.tileY == p1.monster.currenttiley && p1.player.tileX == p1.monster.currenttilex)
+		{
+			p1.enterState(P1Game.GAMEOVERSTATE);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
 	private void checkCollectibles(int newTileY, int newTileX) 
 	{
 		int currentTile = p1.maze[newTileY][newTileX];
+		
 		
 		switch(currentTile) 
 		{

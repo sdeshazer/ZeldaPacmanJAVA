@@ -7,5 +7,5 @@ public class Node
 	public int cost;
 	
 	Node parent;
-
+	Node successor;
 }
