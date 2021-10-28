@@ -28,7 +28,13 @@ class WinState extends BasicGameState
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+
+		P1Game p1 = (P1Game)game;
 		
+		p1.win = true;
+		p1.level1 = false;
+		p1.level2 = false;
+		p1.level3 = false;
 	}
 
 	@Override
@@ -49,6 +55,14 @@ class WinState extends BasicGameState
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException 
 	{
+		p1 = (P1Game) game;
+		Input input = container.getInput();
+		if(p1.win) {
+			if(input.isKeyDown(Input.KEY_Q) )
+			{
+				p1.enterState(P1Game.STARTUPSTATE);
+			}
+		}
 		
 	}
 	

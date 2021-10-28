@@ -61,7 +61,9 @@ public class Level2 extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) 
 	{
 		p1 = (P1Game) game;
-		
+		p1.level1 = false;
+		p1.level2 = true;
+		p1.level3 = false;
 		p1.nextnode = 0;
 		p1.previousnode = 0;
 	
@@ -148,7 +150,7 @@ public class Level2 extends BasicGameState {
 		Input input = container.getInput();
 		p1 = (P1Game) game;
 
-		listenForCheatCode(input, game);
+
 		// TODO player controls:
 		if(inputCoolDown <= 0) 
 		{
@@ -189,16 +191,16 @@ public class Level2 extends BasicGameState {
 		p1.monster.update(delta);
 		p1.monster2.update(delta);
 		checkIfDead();
-	}
-	
-	
-	private void listenForCheatCode(Input input, StateBasedGame game) 
-	{
-		if (input.isKeyDown(Input.KEY_Q)) 
-		{
-			p1.enterState(P1Game.LEVEL3);
+		if(p1.level2) {
+			if(input.isKeyDown(Input.KEY_Q))
+			{
+				p1.enterState(P1Game.LEVEL3);
+			}
 		}
+		
 	}
+	
+
 	
 	
 	private boolean checkIfDead()

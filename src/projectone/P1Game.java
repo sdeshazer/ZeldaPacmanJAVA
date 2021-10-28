@@ -26,6 +26,11 @@ public class P1Game extends StateBasedGame
 	public static final int GAMEOVERSTATE = 4;
 	public static final int WINSTATE = 5;
 	
+	public boolean level1 = false;
+	public boolean level2 = false;
+	public boolean level3 = false;
+	public boolean win = false;
+	
 	public static final String STUMP_NODE = "projectone/resource/treestump_00.png";
 	public static final String PLAYER = "projectone/resource/player.png";
 	public static final String POTION = "projectone/resource/redpotion.png";

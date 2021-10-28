@@ -18,7 +18,7 @@ import org.newdawn.slick.tiled.TiledMap;
 
 public class Level3 extends BasicGameState {
 	
-	private final String TAG = "Level2";
+	private final String TAG = "Level3";
 
 	P1Game p1;
 
@@ -64,7 +64,9 @@ public class Level3 extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) 
 	{
 		p1 = (P1Game) game;
-		
+		p1.level1 = false;
+		p1.level2 = false;
+		p1.level3 = true;
 		p1.nextnode = 0;
 		p1.previousnode = 0;
 	
@@ -153,6 +155,12 @@ public class Level3 extends BasicGameState {
 		Input input = container.getInput();
 		p1 = (P1Game) game;
 
+		if(p1.level3) {
+			if(input.isKeyDown(Input.KEY_Q))
+			{
+				p1.enterState(P1Game.WINSTATE);
+			}
+		}
 		// TODO player controls:
 		if(inputCoolDown <= 0) 
 		{

@@ -59,8 +59,11 @@ public class Level1 extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) 
 	{
-		p1 = (P1Game) game;
 		
+		p1 = (P1Game) game;
+		p1.level1 = true;
+		p1.level2 = false;
+		p1.level3 = false;
 		p1.nextnode = 0;
 		p1.previousnode = 0;
 
@@ -139,6 +142,10 @@ public class Level1 extends BasicGameState {
 		Input input = container.getInput();
 		p1 = (P1Game) game;
 
+		if(input.isKeyDown(Input.KEY_Q))
+		{
+			p1.enterState(P1Game.LEVEL2);
+		}
 		
 		// TODO player controls:
 		if(inputCoolDown <= 0) 
@@ -160,6 +167,7 @@ public class Level1 extends BasicGameState {
 			{
 				moved = determineMove(Moves.RIGHT);
 			}
+			
 			
 			
 			if(moved) 
