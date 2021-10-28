@@ -179,7 +179,7 @@ public class Level3 extends BasicGameState {
 			{
 				inputCoolDown = inputDelay;
 				checkCollectibles(p1.player.tileY, p1.player.tileX);
-				System.out.println(TAG +" current tile y for monster:" + p1.monster.currenttiley);
+
 				p1.monster.moveMonstertoPath(p1 , p1.maze3, p1.monster.currenttiley, p1.monster.currenttilex,
 											p1.player.tileY, p1.player.tileX);
 				p1.monster2.moveMonstertoPath(p1 , p1.maze3, p1.monster2.currenttiley, p1.monster2.currenttilex,
