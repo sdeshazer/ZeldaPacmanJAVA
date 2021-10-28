@@ -6,7 +6,8 @@ Controls: WSAD
 Cheat Code: Q
 Objective: reach the end node (door) and avoid the monsters
 
-# All low bar reached
+# All low bar reached 
+(see issues file)
 
 # other goals reached:
 final score
